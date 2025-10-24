@@ -1,0 +1,28 @@
+import React from 'react';
+import ProductCard from './productCard';
+import { useQuery } from '@tanstack/react-query';
+import { useProducts } from '@/hooks/use-Products';
+
+const ProductRow: React.FC = () => {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['products'],
+    queryFn: useProducts,
+  });
+
+  if (isLoading) return <p>در حال بارگذاری...</p>;
+  if (isError) return <p>خطا در دریافت محصولات</p>;
+
+  return (
+    <section>
+      <div className="grid grid-cols-2 mx-auto gap-4 w-xl max-w-3xl justify-center items-center">
+        {data
+          ?.slice(0, 4)
+          .map((product) => (
+            <ProductCard key={product._id} product={product} componentSize="small" />
+          ))}
+      </div>
+    </section>
+  );
+};
+
+export default ProductRow;
